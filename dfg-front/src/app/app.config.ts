@@ -3,10 +3,14 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {getAuth, provideAuth} from '@angular/fire/auth';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {environment} from '../environment/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi())
-  ]
+    provideHttpClient(withInterceptorsFromDi()),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth())]
 };
