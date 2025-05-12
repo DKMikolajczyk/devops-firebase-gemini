@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
-import {RouterLink} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {MatButton} from '@angular/material/button';
 import {HttpClient} from '@angular/common/http';
 
@@ -15,21 +15,32 @@ import {HttpClient} from '@angular/common/http';
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss']
 })
-export class ErrorComponent implements OnInit {
+export class ErrorComponent {
+
+  private readonly route = inject(ActivatedRoute);
+  private readonly http = inject(HttpClient);
 
   errorMessage: string = "";
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor() {
+    this.route.paramMap.subscribe(params => {
+      const errorType = params.get('type');
 
-  ngOnInit(): void {
-    this.simulateApiError(); // Simulate API error
-    // this.simulateTypeError(); // Simulate Type error
-    // this.simulateCustomError(); // Simulate Custom error
+      switch (errorType) {
+        case 'typeError':
+          this.simulateTypeError();
+          break;
+        case 'customError':
+          this.simulateCustomError();
+          break;
+        default:
+          this.simulateApiError();
+      }
+    });
   }
 
   simulateApiError(): void {
-    this.http.get('https://example.com/api/nonexistent')
+    this.http.get('http://localhost/api/nonexistent')
       .subscribe({
         next: (response) => {
           console.log('Success:', response);
@@ -42,7 +53,6 @@ export class ErrorComponent implements OnInit {
       });
   }
 
-  // Simulate a type error
   simulateTypeError(): void {
     try {
       const data: any = 'not an object';
@@ -53,7 +63,6 @@ export class ErrorComponent implements OnInit {
     }
   }
 
-  // Simulate a custom error
   simulateCustomError(): void {
     try {
       throw new Error('Custom error message');
