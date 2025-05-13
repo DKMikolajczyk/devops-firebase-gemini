@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
   private auth: Auth = inject(Auth);
   private db: Database = inject(Database);
   user$: Observable<User | null> = user(this.auth);
-  userName$: Observable<string | null> = of(null); // Initialize as Observable
+  userName$: Observable<string | null> = of(null);
   email = '';
   password = '';
   name = '';
@@ -108,20 +108,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userName$ = this.user$.pipe(
-      switchMap((user) => {
-        if (user) {
-          const userRef = ref(this.db, `users/${user.uid}/name`);
-          return get(userRef).then((snapshot) => {
-            return snapshot.exists() ? snapshot.val() : user.email;
-          }).catch(() => {
-            return user.email;
-          });
-        } else {
-          return of(null);
-        }
-      })
-    );
+    this.initUserName();
   }
 
   toggleSignUp() {
@@ -133,14 +120,14 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.loading = true;
     try {
-      const result = await signInWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         this.auth,
         this.email,
         this.password
       );
 
       // Set userName$ here
-      this.userName$ = of(result.user.email);
+      this.initUserName();
 
       this.email = '';
       this.password = '';
@@ -204,6 +191,23 @@ export class LoginComponent implements OnInit {
 
   redirectToHomePage() {
     this.router.navigate(['']).then();
+  }
+
+  private initUserName() {
+    this.userName$ = this.user$.pipe(
+      switchMap((user) => {
+        if (user) {
+          const userRef = ref(this.db, `users/${user.uid}/name`);
+          return get(userRef).then((snapshot) => {
+            return snapshot.exists() ? snapshot.val() : user.email;
+          }).catch(() => {
+            return user.email;
+          });
+        } else {
+          return of(null);
+        }
+      })
+    );
   }
 }
 
