@@ -1,23 +1,23 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {Router} from '@angular/router';
 import {
   Auth,
-  User,
-  user,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  User,
+  user,
 } from '@angular/fire/auth';
-import { Observable, of, switchMap } from 'rxjs';
-import { Database, ref, set, get } from '@angular/fire/database';
+import {Observable, of, switchMap} from 'rxjs';
+import {Database, get, ref, set} from '@angular/fire/database';
 
 @Component({
   selector: 'app-login',
@@ -48,17 +48,17 @@ import { Database, ref, set, get } from '@angular/fire/database';
 
           <mat-form-field appearance="fill">
             <mat-label>Email</mat-label>
-            <input matInput type="email" [(ngModel)]="email" />
+            <input matInput type="email" [(ngModel)]="email"/>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
             <mat-label>Password</mat-label>
-            <input matInput type="password" [(ngModel)]="password" />
+            <input matInput type="password" [(ngModel)]="password"/>
           </mat-form-field>
 
           <mat-form-field appearance="fill" *ngIf="isSignUp">
             <mat-label>Name</mat-label>
-            <input matInput type="text" [(ngModel)]="name" />
+            <input matInput type="text" [(ngModel)]="name"/>
           </mat-form-field>
 
           <div class="button-row">
@@ -104,7 +104,8 @@ export class LoginComponent implements OnInit {
   loading = false;
   isSignUp = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+  }
 
   ngOnInit(): void {
     this.userName$ = this.user$.pipe(
