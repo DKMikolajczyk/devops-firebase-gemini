@@ -18,7 +18,7 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'error',
+    path: 'error/:type',
     component: ErrorComponent
   },
   {
