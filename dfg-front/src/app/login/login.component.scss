@@ -1,0 +1,27 @@
+.login-card {
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+mat-form-field {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.button-row button {
+  margin: 5px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 15px;
+}
+
+mat-spinner {
+  margin: 10px auto;
+}
+
+mat-card-title {
+  margin-bottom: 16px;
+}

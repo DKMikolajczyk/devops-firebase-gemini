@@ -1,3 +1,7 @@
+<div class="sign-out-container" *ngIf="(user$ | async)">
+  <button mat-stroked-button (click)="logout()">Sign Out</button>
+</div>
+
 <div class="container">
   <mat-card>
     <mat-card-content class="content">
