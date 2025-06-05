@@ -66,6 +66,7 @@ import {Database, get, ref, set} from '@angular/fire/database';
               mat-raised-button
               color="primary"
               [disabled]="loading"
+              *ngIf="!isSignUp"
               (click)="loginWithEmail()"
             >
               Sign In
@@ -126,7 +127,6 @@ export class LoginComponent implements OnInit {
         this.password
       );
 
-      // Set userName$ here
       this.initUserName();
 
       this.email = '';
