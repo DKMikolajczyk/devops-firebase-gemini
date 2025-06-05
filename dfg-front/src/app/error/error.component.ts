@@ -1,8 +1,8 @@
-import {Component, inject} from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {MatButton} from '@angular/material/button';
-import {HttpClient} from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-error',
@@ -17,7 +17,11 @@ import {HttpClient} from '@angular/common/http';
 })
 export class ErrorComponent {
 
+  private static readonly APP_NAME = "dfg-front";
+  private static readonly REPORTER_URL = "https://europe-central2-devops-firebase-gemini.cloudfunctions.net/sendErrorReport";
+
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
 
   errorMessage: string = "";
@@ -36,6 +40,7 @@ export class ErrorComponent {
         default:
           this.simulateApiError();
       }
+      this.reportError(this.errorMessage);
     });
   }
 
@@ -72,4 +77,9 @@ export class ErrorComponent {
     }
   }
 
+  reportError(errorMessage: string): void {
+    const request = {appName: ErrorComponent.APP_NAME, url: this.router.url, errorMessage};
+    this.http.post(ErrorComponent.REPORTER_URL, request)
+      .subscribe(res => console.log(JSON.stringify(res)));
+  }
 }
