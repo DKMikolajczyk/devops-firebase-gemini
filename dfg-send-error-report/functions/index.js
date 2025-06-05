@@ -1,4 +1,4 @@
-const {onRequest} = require('firebase-functions/v2/https');
+const {onValueCreated} = require('firebase-functions/v2/database');
 const {initializeApp} = require('firebase-admin/app');
 const {VertexAI} = require('@google-cloud/vertexai');
 const nodemailer = require('nodemailer');
@@ -25,17 +25,23 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-exports.sendErrorReport = onRequest({region: location}, async (req, res) => {
+exports.sendErrorReport = onValueCreated({
+    region: location,
+    ref: '/errorReports/{pushId}',
+}, async (event) => {
     try {
-        const {appName, errorMessage, url} = req.body;
+        const value = event.data.val();
+        const {appName, errorMessage, url} = value;
 
         if (!errorMessage) {
-            res.status(400).send('Brak treści błędu.');
+            console.warn('Brak treści błędu.');
             return;
         }
 
         const prompt = `
-Otrzymano zgłoszenie błędu z aplikacji:
+Jesteś doświadczonym inżynierem aplikacji, 
+specjalizujesz się w aplikacjach front-end, 
+dostałeś zgłoszenie dotyczące aplikacji hostowanej na Firebase:
 - Nazwa aplikacji: ${appName}
 - Treść błędu: ${errorMessage}
 - URL: ${url || 'brak'}
@@ -65,9 +71,7 @@ Podaj możliwe przyczyny błędu oraz sugestie dotyczące jego naprawy w punktac
       `,
         });
 
-        res.status(200).send('Zgłoszenie błędu zostało przetworzone.');
     } catch (err) {
         console.error('Błąd podczas przetwarzania zgłoszenia:', err);
-        res.status(500).send('Wystąpił błąd serwera.');
     }
 });

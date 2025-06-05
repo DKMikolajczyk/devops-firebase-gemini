@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
+import { Database, push, ref, set } from '@angular/fire/database';
 
 @Component({
   selector: 'app-error',
@@ -18,11 +19,11 @@ import { HttpClient } from '@angular/common/http';
 export class ErrorComponent {
 
   private static readonly APP_NAME = "dfg-front";
-  private static readonly REPORTER_URL = "https://europe-central2-devops-firebase-gemini.cloudfunctions.net/sendErrorReport";
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
+  private readonly db: Database = inject(Database);
 
   errorMessage: string = "";
 
@@ -40,7 +41,6 @@ export class ErrorComponent {
         default:
           this.simulateApiError();
       }
-      this.reportError(this.errorMessage);
     });
   }
 
@@ -49,11 +49,11 @@ export class ErrorComponent {
       .subscribe({
         next: (response) => {
           console.log('Success:', response);
-          this.errorMessage = "Received an unexpected response from the server.";
+          this.updateErrorMessage("Received an unexpected response from the server.");
         },
         error: (error) => {
           console.error('API Error:', error);
-          this.errorMessage = "Error fetching data from the server.";
+          this.updateErrorMessage("Error fetching data from the server.");
         }
       });
   }
@@ -64,7 +64,7 @@ export class ErrorComponent {
       console.log(data.property.nested);
     } catch (error) {
       console.error('Type Error:', error);
-      this.errorMessage = "A type error occurred. Please try again.";
+      this.updateErrorMessage("A type error occurred. Please try again.");
     }
   }
 
@@ -73,13 +73,20 @@ export class ErrorComponent {
       throw new Error('Custom error message');
     } catch (error: any) {
       console.error('Custom Error:', error);
-      this.errorMessage = error.message;
+      this.updateErrorMessage(error.message);
     }
   }
 
+  updateErrorMessage(errorMessage: string) {
+    this.errorMessage = errorMessage;
+    this.reportError(errorMessage);
+  }
+
   reportError(errorMessage: string): void {
-    const request = {appName: ErrorComponent.APP_NAME, url: this.router.url, errorMessage};
-    this.http.post(ErrorComponent.REPORTER_URL, request)
-      .subscribe(res => console.log(JSON.stringify(res)));
+    const errorRef = ref(this.db, 'errorReports');
+    const errorData = {appName: ErrorComponent.APP_NAME, url: this.router.url, errorMessage: errorMessage};
+    const newErrorRef = push(errorRef);
+    set(newErrorRef, errorData)
+      .then(() => console.log(`Error reported`))
   }
 }
