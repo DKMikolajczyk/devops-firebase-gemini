@@ -39,15 +39,16 @@ exports.sendErrorReport = onValueCreated({
         }
 
         const prompt = `
-Jesteś doświadczonym inżynierem aplikacji, 
-specjalizujesz się w aplikacjach front-end, 
-dostałeś zgłoszenie dotyczące aplikacji hostowanej na Firebase:
-- Nazwa aplikacji: ${appName}
-- Treść błędu: ${errorMessage}
-- URL: ${url || 'brak'}
-
-Podaj możliwe przyczyny błędu oraz sugestie dotyczące jego naprawy w punktach.
-`;
+        Jesteś doświadczonym inżynierem aplikacji, 
+        specjalizujesz się w aplikacjach front-end, 
+        dostałeś zgłoszenie dotyczące aplikacji hostowanej na Firebase:
+        - Nazwa aplikacji: ${appName}
+        - Treść błędu: ${errorMessage}
+        - URL: ${url || 'brak'}
+        
+        Podaj możliwe przyczyny błędu oraz sugestie dotyczące jego naprawy w punktach. 
+        (Podaj tylko potencjalne przyczyny i sugestie, bez dodatkowych komentarzy)
+        `;
 
         const result = await model.generateContent({
             contents: [{role: 'user', parts: [{text: prompt}]}],

@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatButton } from '@angular/material/button';
-import { HttpClient } from '@angular/common/http';
-import { Database, push, ref, set } from '@angular/fire/database';
+import {Component, inject} from '@angular/core';
+import {MatCardModule} from '@angular/material/card';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {MatButton} from '@angular/material/button';
+import {HttpClient} from '@angular/common/http';
+import {Database, push, ref, set} from '@angular/fire/database';
 
 @Component({
   selector: 'app-error',
