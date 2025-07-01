@@ -7,6 +7,7 @@ import {getAuth, provideAuth} from '@angular/fire/auth';
 import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import {environment} from '../environment/environment';
 import {getDatabase, provideDatabase} from '@angular/fire/database';
+import {getStorage, provideStorage} from '@angular/fire/storage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase())]
+    provideDatabase(() => getDatabase()),
+    provideStorage(() => getStorage())]
 };

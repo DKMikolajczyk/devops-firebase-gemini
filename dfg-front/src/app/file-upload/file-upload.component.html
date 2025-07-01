@@ -1,0 +1,34 @@
+<mat-card>
+  <mat-card-content>
+    <div class="upload-container">
+      <input
+        type="file"
+        #fileInput
+        hidden
+        (change)="uploadFile($event)"
+        accept="image/*"
+      >
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="fileInput.click()"
+        [disabled]="isUploading"
+      >
+        <mat-icon>cloud_upload</mat-icon>
+        Select File
+      </button>
+
+      <div *ngIf="isUploading" class="progress-container">
+        <mat-progress-bar
+          mode="determinate"
+          [value]="uploadProgress"
+        ></mat-progress-bar>
+        <div class="progress-text">{{ uploadProgress }}%</div>
+      </div>
+    </div>
+
+    <div *ngIf="downloadUrl" class="preview-container">
+      <img [src]="downloadUrl" alt="Uploaded">
+    </div>
+  </mat-card-content>
+</mat-card>
