@@ -3,6 +3,7 @@ import {ErrorComponent} from './error/error.component';
 import {HomeComponent} from './home/home.component';
 import {LoginComponent} from './login/login.component';
 import {AuthGuard, redirectUnauthorizedTo} from '@angular/fire/auth-guard';
+import {FileUploadComponent} from './file-upload/file-upload.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
@@ -20,6 +21,10 @@ export const routes: Routes = [
   {
     path: 'error/:type',
     component: ErrorComponent
+  },
+  {
+    path: 'file/upload',
+    component: FileUploadComponent,
   },
   {
     path: '**',
