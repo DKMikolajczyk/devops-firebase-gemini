@@ -19,16 +19,21 @@ const model = vertexAI.getGenerativeModel({
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT),
+    secure: false,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
+    tls: {
+        ciphers: 'SSLv3'
+    }
 });
 
 exports.sendErrorReport = onValueCreated({
     region: location,
     ref: '/errorReports/{pushId}',
 }, async (event) => {
+    console.info('Received event');
     try {
         const value = event.data.val();
         const {appName, errorMessage, url} = value;
@@ -58,8 +63,8 @@ exports.sendErrorReport = onValueCreated({
 
         const recipients = process.env.RECIPIENTS.split(',');
 
-        await transporter.sendMail({
-            from: `"Zgłoszenie błędu" <${process.env.SMTP_USER}>`,
+        const mailOptions = {
+            from: `"Zgłoszenie błędu" <${process.env.SMTP_SENDER}>`,
             to: recipients,
             subject: 'Nowe zgłoszenie błędu z aplikacji Angular',
             html: `
@@ -69,10 +74,18 @@ exports.sendErrorReport = onValueCreated({
         <p><strong>URL:</strong> ${url || 'brak'}</p>
         <h3>Sugestie naprawy:</h3>
         <pre>${suggestions}</pre>
-      `,
+        `
+        }
+
+        await transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error('Error during sending message: ', err);
+            } else {
+                console.info('Message sent to recipients: ', recipients);
+            }
         });
 
     } catch (err) {
-        console.error('Błąd podczas przetwarzania zgłoszenia:', err);
+        console.error('Error during event processing: ', err);
     }
 });
