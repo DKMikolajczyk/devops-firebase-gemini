@@ -3,8 +3,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCardModule} from '@angular/material/card';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {getDownloadURL, ref, Storage, uploadBytesResumable} from '@angular/fire/storage';
+import {HttpClient} from '@angular/common/http';
+import {getAI, getGenerativeModel, GoogleAIBackend} from "firebase/ai";
+import {FirebaseApp} from '@angular/fire/app';
 
 @Component({
   selector: 'app-file-upload',
@@ -15,7 +18,9 @@ import {getDownloadURL, ref, Storage, uploadBytesResumable} from '@angular/fire/
     MatIconModule,
     MatProgressBarModule,
     MatCardModule,
-    NgIf
+    NgIf,
+    NgOptimizedImage,
+    NgClass
   ],
   styleUrl: './file-upload.component.scss'
 })
@@ -23,8 +28,17 @@ export class FileUploadComponent {
   uploadProgress: number | null = null;
   downloadUrl: string | null = null;
   isUploading = false;
+  fileAnalisisResult: string | null = null;
+  isAnalysisInProgress: boolean = false;
 
-  private storage: Storage = inject(Storage);
+  private readonly storage: Storage = inject(Storage);
+  private readonly http = inject(HttpClient);
+  private readonly firebaseApp = inject(FirebaseApp);
+
+  private readonly ai = getAI(this.firebaseApp, {backend: new GoogleAIBackend()});
+  private readonly aiModel = getGenerativeModel(this.ai, {
+    model: 'gemini-2.5-flash',
+  });
 
   uploadFile(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -55,8 +69,30 @@ export class FileUploadComponent {
           this.downloadUrl = url;
           this.isUploading = false;
           this.uploadProgress = null;
+          this.analyzeImage(this.downloadUrl)
+            .then(r => this.fileAnalisisResult = r);
         });
       }
     );
+  }
+
+  async analyzeImage(fileUri: string) {
+    const textPrompt = `Opisz jednym zdaniem obraz, który znajduje się pod adresem ${fileUri}`;
+    this.isAnalysisInProgress = true;
+
+    try {
+      const result = await this.aiModel.generateContent([
+        textPrompt,
+      ]);
+
+      const responseText = result.response.text();
+      console.log('Opis obrazu od Gemini:', responseText);
+      return responseText;
+    } catch (error) {
+      console.error('Błąd podczas analizy obrazu przez Gemini:', error);
+      return 'Nie udało się opisać obrazu';
+    } finally {
+      this.isAnalysisInProgress = false;
+    }
   }
 }

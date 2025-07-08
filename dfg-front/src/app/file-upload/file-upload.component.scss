@@ -1,0 +1,25 @@
+.image-analysis {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  color: #666;
+
+  img {
+    height: 32px;
+    width: 32px;
+    &.spin {
+      animation: rotateInfinite 2s linear infinite;
+    }
+  }
+
+}
+
+@keyframes rotateInfinite {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
