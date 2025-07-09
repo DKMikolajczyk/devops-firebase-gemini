@@ -3,10 +3,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCardModule} from '@angular/material/card';
-import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import {getDownloadURL, ref, Storage, uploadBytesResumable} from '@angular/fire/storage';
-import {HttpClient} from '@angular/common/http';
-import {getAI, getGenerativeModel, GoogleAIBackend} from "firebase/ai";
+import {getAI, getGenerativeModel, GoogleAIBackend} from '@firebase/ai';
 import {FirebaseApp} from '@angular/fire/app';
 
 @Component({
@@ -19,7 +18,6 @@ import {FirebaseApp} from '@angular/fire/app';
     MatProgressBarModule,
     MatCardModule,
     NgIf,
-    NgOptimizedImage,
     NgClass
   ],
   styleUrl: './file-upload.component.scss'
@@ -32,7 +30,6 @@ export class FileUploadComponent {
   isAnalysisInProgress: boolean = false;
 
   private readonly storage: Storage = inject(Storage);
-  private readonly http = inject(HttpClient);
   private readonly firebaseApp = inject(FirebaseApp);
 
   private readonly ai = getAI(this.firebaseApp, {backend: new GoogleAIBackend()});
