@@ -29,6 +29,11 @@
 
     <div *ngIf="downloadUrl" class="preview-container">
       <img [src]="downloadUrl" alt="Uploaded">
+      <div class="image-analysis">
+        <img src="assets/images/google-gemini-icon.webp" alt="gemini-logo"
+             [ngClass]="{spin: isAnalysisInProgress}"/>
+        <p>{{fileAnalisisResult}}</p>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>
