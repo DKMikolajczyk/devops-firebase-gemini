@@ -1,10 +1,113 @@
-.home-message {
-  font-size: 1.5em;
-  text-align: center;
-  color: green;
+// Variables
+$card-width: 520px;
+$card-radius: 8px;
+$card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+$bg-light: #f8f9fa;
+$text-dark: #333;
+$text-muted: #555;
+$primary-color: #3f51b5;
+$secondary-color: #673ab7;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 20px;
+
+// Common mixins
+@mixin flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-mat-card {
-  max-width: 600px;
-  margin: 20px auto;
+@mixin card-base {
+  width: 100%;
+  max-width: $card-width;
+  border-radius: $card-radius;
+  box-shadow: $card-shadow;
+  box-sizing: border-box;
+}
+
+// Layout containers
+.welcome-container {
+  @include flex-center;
+  padding: 10px $spacing-lg $spacing-lg;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.section-container {
+  @include flex-center;
+  width: 100%;
+  max-width: $card-width;
+  margin: 0 auto $spacing-lg;
+  box-sizing: border-box;
+}
+
+// Loading states
+.loading-container, .card-loading-container {
+  @include flex-center;
+  justify-content: center;
+  padding: $spacing-lg;
+
+  p {
+    margin-top: $spacing-md;
+    color: $text-muted;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.loading-container {
+  @include card-base;
+  min-height: 100px;
+  background-color: $bg-light;
+}
+
+.card-loading-container {
+  min-height: 80px;
+}
+
+// Cards
+.news-card {
+  @include card-base;
+  margin-bottom: $spacing-lg;
+
+  mat-card-header {
+    color: white;
+    padding: $spacing-md;
+    border-radius: $card-radius $card-radius 0 0;
+    background-color: $secondary-color;
+
+    mat-card-title {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    mat-card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      margin: $spacing-sm 0 0;
+    }
+  }
+
+  mat-list {
+    padding: 0;
+
+    mat-list-item {
+      font-size: 14px;
+      padding: 12px $spacing-md;
+      color: $text-dark;
+    }
+  }
+}
+
+// Buttons
+.button-container {
+  display: flex;
+  gap: $spacing-md;
+  margin: 0 0 $spacing-lg;
+  width: 100%;
+  justify-content: center;
+
+  button {
+    min-width: 150px;
+  }
 }
