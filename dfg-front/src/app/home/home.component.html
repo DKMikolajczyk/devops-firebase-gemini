@@ -1,10 +1,29 @@
-<mat-card>
-  <mat-card-content>
-    <p class="home-message">
-      {{ homeMessage }}
-    </p>
+<div class="welcome-container">
+  <div class="section-container">
+    <mat-card class="news-card">
+      <mat-card-header>
+        <mat-card-title>Today's Headlines</mat-card-title>
+        <mat-card-subtitle>Powered by Gemini AI</mat-card-subtitle>
+      </mat-card-header>
 
+      <mat-card-content *ngIf="newsLoading" class="card-loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading today's headlines...</p>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="!newsLoading">
+        <mat-list role="list">
+          <mat-list-item *ngFor="let headline of newsHeadlines" role="listitem">
+            {{ headline }}
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="button-container">
     <button mat-raised-button routerLink="/error/apiError">Go to Error Page</button>
     <button mat-raised-button routerLink="/file/upload">File Upload</button>
-  </mat-card-content>
-</mat-card>
+  </div>
+</div>

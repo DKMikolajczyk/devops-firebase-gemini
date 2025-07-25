@@ -5,8 +5,18 @@
 <div class="container">
   <mat-card>
     <mat-card-content class="content">
-      <h1>Hello World!</h1>
-      <p>Welcome to my simple Angular application.</p>
+      <h1 class="greeting-title">
+        ✨ Welcome! ✨
+      </h1>
+
+      <div *ngIf="greetingLoading" class="greeting-loading-container">
+        <mat-spinner diameter="30"></mat-spinner>
+        <p>Loading your personalized greeting...</p>
+      </div>
+
+      <p *ngIf="!greetingLoading" class="greeting-message">
+        {{ personalGreeting }} 🎉
+      </p>
 
       <router-outlet></router-outlet>
     </mat-card-content>

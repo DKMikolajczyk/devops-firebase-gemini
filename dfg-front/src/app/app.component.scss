@@ -9,7 +9,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 20px 0;
   background-color: #f0f0f0;
 }
 
@@ -17,6 +18,8 @@ mat-card {
   max-width: 600px;
   width: 90%;
   box-sizing: border-box;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .content {
@@ -32,5 +35,39 @@ mat-card {
   p {
     font-size: 1.2em;
     color: #666;
+    margin-bottom: 20px;
+  }
+
+  .greeting-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    p {
+      margin-top: 10px;
+      color: #555;
+      font-size: 1em;
+    }
+  }
+
+  .greeting-title {
+    font-size: 2.5em;
+    color: #673ab7;
+    margin-bottom: 15px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .greeting-message {
+    font-size: 1.2em;
+    color: #3f51b5;
+    line-height: 1.4;
+    padding: 10px;
+    margin-bottom: 30px;
+    font-weight: 500;
   }
 }
